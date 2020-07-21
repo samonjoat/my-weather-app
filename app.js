@@ -6,6 +6,8 @@ window.addEventListener("load", () => {
   );
   let temperatureDegree = document.querySelector(".temperature-degree");
   let locationTimezone = document.querySelector(".location-timezone");
+  let temperatureSection = document.querySelector(".temperature");
+  let temperatureSpan = document.querySelector(".temperature span");
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -13,7 +15,7 @@ window.addEventListener("load", () => {
       lat = position.coords.latitude;
 
       const proxy = `https://cors-anywhere.herokuapp.com/`;
-      const api = `${proxy}https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=191122672216a5f64a876ac00ca7988a
+      const api = `${proxy}https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=191122672216a5f64a876ac00ca7988a
       `;
 
       fetch(api)
@@ -21,12 +23,31 @@ window.addEventListener("load", () => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
-          const { temp } = data.main;
-          const description = data.name;
+          const { temp } = data.current;
+          const { description, icon } = data.current.weather[0];
           //set DOM elements from API
           temperatureDegree.textContent = temp;
+          temperatureDescription.textContent = description;
+          locationTimezone.textContent = data.timezone;
+          //set icons
+          setIcons(icon, document.querySelector(".icon"));
+
+          //change temperature to farenhighgt
+          temperatureSection.addEventListener("click", () => {
+            if (temperatureSpan.textContent === "F") {
+              temperatureSpan.textContent = "C";
+            } else {
+              temperatureSpan.textContent = "F";
+            }
+          });
         });
     });
+  }
+
+  function setIcons(icon, iconID) {
+    const skycons = new Skycons({ color: "white" });
+    const currentIcon = icon.toUpperCase;
+    skycons.play();
+    return skycons.set(iconID, Skycons[currentIcon]);
   }
 });
