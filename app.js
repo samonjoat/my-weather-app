@@ -29,6 +29,8 @@ window.addEventListener("load", () => {
           temperatureDegree.textContent = temp;
           temperatureDescription.textContent = description;
           locationTimezone.textContent = data.timezone;
+          //formula for farengirt
+          let celsius = (temperature - 32) * (5 / 9);
           //set icons
           setIcons(icon, document.querySelector(".icon"));
 
@@ -36,8 +38,10 @@ window.addEventListener("load", () => {
           temperatureSection.addEventListener("click", () => {
             if (temperatureSpan.textContent === "F") {
               temperatureSpan.textContent = "C";
+              temperatureDegree.textContent = Math.floor(celsius);
             } else {
               temperatureSpan.textContent = "F";
+              temperatureDegree.textContent = temp;
             }
           });
         });
