@@ -8,6 +8,7 @@ window.addEventListener("load", () => {
   let locationTimezone = document.querySelector(".location-timezone");
   let temperatureSection = document.querySelector(".temperature");
   let temperatureSpan = document.querySelector(".temperature span");
+  let iconLocation = document.querySelector(".icon");
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -23,6 +24,7 @@ window.addEventListener("load", () => {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           const { temp } = data.current;
           const { description, icon } = data.current.weather[0];
           //set DOM elements from API
@@ -30,9 +32,10 @@ window.addEventListener("load", () => {
           temperatureDescription.textContent = description;
           locationTimezone.textContent = data.timezone;
           //formula for farengirt
-          let celsius = (temperature - 32) * (5 / 9);
+          let celsius = (temp - 32) * (5 / 9);
           //set icons
-          setIcons(icon, document.querySelector(".icon"));
+
+          iconLocation.innerHTML = `<img src="http://openweathermap.org/img/w/${icon}.png" alt="icon" width="100" height="100" />`;
 
           //change temperature to farenhighgt
           temperatureSection.addEventListener("click", () => {
@@ -46,12 +49,5 @@ window.addEventListener("load", () => {
           });
         });
     });
-  }
-
-  function setIcons(icon, iconID) {
-    const skycons = new Skycons({ color: "white" });
-    const currentIcon = icon.toUpperCase;
-    skycons.play();
-    return skycons.set(iconID, Skycons[currentIcon]);
   }
 });
